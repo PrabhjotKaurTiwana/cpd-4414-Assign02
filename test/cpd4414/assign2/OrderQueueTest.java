@@ -107,7 +107,7 @@ public class OrderQueueTest {
         Order order = new Order("Data", "NewData");
         order.addPurchase(new Purchase(1, 8));
         orderQueue.add(order);
-        Order order1 = new Order("Data", "Data");
+        Order order1 = new Order("Data", "NewData");
         order1.addPurchase(new Purchase(2, 4));
         orderQueue.add(order1);
 
@@ -157,10 +157,10 @@ public class OrderQueueTest {
     @Test
       public void testFulfillWhenTimeReceivedIsSetAndTimeProcessedIsSetAndItemsInStockThenSetTimeFulfilledToNow() throws OrderQueue.NoCustomerException, OrderQueue.NoPurchasesException, OrderQueue.NoTimeReceivedException, OrderQueue.NoTimeProcessedException {
         OrderQueue orderQueue = new OrderQueue();
-        Order order = new Order("Data", "OtherValues");
+        Order order = new Order("Data", "NewData");
         order.addPurchase(new Purchase(1, 8));
         orderQueue.add(order);
-        Order order1 = new Order("Data", "OtherValues");
+        Order order1 = new Order("Data", "NewData");
         order1.addPurchase(new Purchase(2, 4));
         orderQueue.add(order1);
 
@@ -179,7 +179,7 @@ public class OrderQueueTest {
     public void testFulfillWhenTimeReceivedNotSetThenThrowException() throws OrderQueue.NoTimeProcessedException {
         boolean didThrow = false;
         OrderQueue orderQueue = new OrderQueue();
-        Order order = new Order("Data", "OtherValues");
+        Order order = new Order("Data", "NewData");
         order.addPurchase(new Purchase(1, 8));
 
         try {
@@ -195,7 +195,7 @@ public class OrderQueueTest {
     public void testFulfillWhenTimeProcessedNotSetThenThrowException() throws OrderQueue.NoCustomerException, OrderQueue.NoPurchasesException, OrderQueue.NoTimeReceivedException {
         boolean didThrow = false;
         OrderQueue orderQueue = new OrderQueue();
-        Order order = new Order("Data", "OtherValues");
+        Order order = new Order("Data", "NewData");
         order.addPurchase(new Purchase(1, 8));
         orderQueue.add(order);
 
