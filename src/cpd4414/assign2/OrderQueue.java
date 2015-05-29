@@ -17,60 +17,107 @@
 
 package cpd4414.assign2;
 
+
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Queue;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 /**
  *
  * @author Len Payne <len.payne@lambtoncollege.ca>
  */
 public class OrderQueue {
+
     Queue<Order> orderQueue = new ArrayDeque<>();
-     List<Order> orderList = new ArrayList<>();
-    public void add(Order order) throws NoCustomerException,NoPurchasesException{
-        if(order.getCustomerId().isEmpty()&& order.getCustomerName().isEmpty()){
+    List<Order> orderList = new ArrayList<>();
+
+    public void add(Order order) throws NoCustomerException, NoPurchasesException {
+        if (order.getCustomerId().isEmpty() && order.getCustomerName().isEmpty()) {
             throw new NoCustomerException();
-    }
-           if(order.getListOfPurchases().isEmpty()){
+        }
+        if (order.getListOfPurchases().isEmpty()) {
             throw new NoPurchasesException();
-    } 
+        }
         orderQueue.add(order);
         order.setTimeReceived(new Date());
     }
 
-    Order next() {
-       return orderQueue.peek();
+    public Order next() {
+        return orderQueue.peek();
     }
 
-     void process(Order next) throws NoTimeReceivedException {
+    void process(Order next) throws NoTimeReceivedException {
         if (next.equals(next())) {
-        orderList.add(orderQueue.remove());
+   
+            orderList.add(orderQueue.remove());
             next.setTimeProcessed(new Date());
+        
         } else if (next.getTimeReceived() == null) {
             throw new NoTimeReceivedException();
         }
     }
-  
+
+    void fulfill(Order next) throws NoTimeReceivedException, NoTimeProcessedException {
+        if (next.getTimeReceived() == null) {
+            throw new NoTimeReceivedException();
+        }
+        if (next.getTimeProcessed() == null) {
+            throw new NoTimeProcessedException();
+        }
+        if (orderList.contains(next)) {
+            next.setTimeFulfilled(new Date());
+        }
+    }
+
+    String report() {
+     String output = "";
+      if (!(orderQueue.isEmpty() && orderList.isEmpty())) {
+            JSONObject obj = new JSONObject();
+            JSONArray orders = new JSONArray();
+            for (Order o : orderList) {
+                orders.add(o.toJSON());
+            }
+            for (Order o : orderQueue) {
+                orders.add(o.toJSON());
+            }
+            obj.put("ORDERS", orders);
+            output = obj.toJSONString();
+        }
+        return output;
+    }
+
+   
 
     public class NoCustomerException extends Exception {
-        public NoCustomerException(){
+
+        public NoCustomerException() {
             super("No Customer");
         }
     }
-      public class NoPurchasesException extends Exception {
-          
-        public NoPurchasesException(){
+
+    public class NoPurchasesException extends Exception {
+
+        public NoPurchasesException() {
             super("No Purchases");
         }
     }
-       public class NoTimeReceivedException extends Exception {
+
+    public class NoTimeReceivedException extends Exception {
 
         public NoTimeReceivedException() {
-            super("No Time Received on this Order");
+            super("No Time Received for this Order");
         }
+    }
 
+    public class NoTimeProcessedException extends Exception {
+
+        public NoTimeProcessedException() {
+            super("No Time Processed for this Order");
+        }
+    }
 }
-}
+
