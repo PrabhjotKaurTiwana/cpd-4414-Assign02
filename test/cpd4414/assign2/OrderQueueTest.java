@@ -67,31 +67,32 @@ public class OrderQueueTest {
     }
    
      @Test
-    public void testWhenCustomerExistsAndPurchasesExistThenThrownAnException() {
+    public void testWhenNoCustomerExistsThenThrownAnException() throws OrderQueue.NoPurchasesException {
         boolean didThrow = false;
             OrderQueue orderQueue = new OrderQueue();
         Order order = new Order("", "");
         order.addPurchase(new Purchase("PROD0004", 450));
         order.addPurchase(new Purchase("PROD0006", 250));
         try{
+           
             orderQueue.add(order);
         }
-        catch(Exception ex){
+        catch(OrderQueue.NoCustomerException ex){
             didThrow = true;
         }
         assertTrue(didThrow);
     }
     @Test
-    public void testWhenPurchasesThenThrownAnException() {
+    public void testWhenNoPurchasesThenThrownAnException() throws OrderQueue.NoCustomerException {
          boolean didThrow = false;
          OrderQueue orderQueue = new OrderQueue();
-        Order order = new Order("SomeNormal", "Order");
+        Order order = new Order("NormalText", "Order");
         order.addPurchase(new Purchase("PROD0004", 450));
         order.addPurchase(new Purchase("PROD0006", 250));
             try{
             orderQueue.add(order);
         }
-        catch(Exception ex){
+        catch(OrderQueue.NoPurchasesException ex){
             didThrow = true;
         }
         assertTrue(didThrow);
